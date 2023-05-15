@@ -7,11 +7,15 @@ import android.os.PersistableBundle
 import android.util.Log
 import androidx.activity.viewModels
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 
 class MainActivity : AppCompatActivity() {
-//SharedFlow  добавить в проэкт по ретрофиту
-//добавить кнопку start которы начинает цикл от одного до 20 (Показывать в textVIew с задержко в секунду )
-//добавить кнопку stop ,при нажати остановить цикл и показать в textView 0
+
+    val isFinish=true
+
+
+
+
 
     val viewModel:MyViewModel by viewModels()
 
@@ -21,92 +25,50 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        viewModel.liveData.observe(this){
 
 
 
+
+        val r: Deferred<Int> = CoroutineScope(Dispatchers.IO).async {
+
+
+            var i = 0
+            if (isFinish){
+
+                i=4
+            }else{
+               i=5
+
+            }
+
+
+
+
+
+
+            i
         }
-
-
-
-
-
-  /* val job=  CoroutineScope(Dispatchers.IO).launch {
-
-
-         loop()
-         loop()
-
-
-
-     }
-
-*/
-
-   //val i=   GlobalScope.launch(Dispatchers.IO ){
-
-
-
- //     }
-
-
-
-
-     val r:Deferred<Int> =   CoroutineScope(Dispatchers.IO).async{
-
-        launch {
-
-
-        }
-
-       val i=  4
-
-         i
-     }
-
-     // setPhoto()
-
-
 
 
 
 
 
         runBlocking {
+data.collect{
+
+Log.d("moss",it)
+
+}
 
 
-            async(Dispatchers.IO) {
-
-
-            }
-
-
-
-            launch(Dispatchers.IO) {
-            }
+                Log.d("ololo", r.await().toString())
 
 
 
-
-
-
-            launch(Dispatchers.Main) {
-
-
-            }
 
         }
 
-
-
-
-
-
-
-
     }
-
-
 
   suspend fun loop(){
 
@@ -127,21 +89,23 @@ class MainActivity : AppCompatActivity() {
    }
 
 
-    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
-        super.onSaveInstanceState(outState, outPersistentState)
-    }
-
-    override fun onRestoreInstanceState(
-        savedInstanceState: Bundle?,
-        persistentState: PersistableBundle?
-    ) {
-        super.onRestoreInstanceState(savedInstanceState, persistentState)
-    }
+    val data= flow {
 
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
-    }
+if (isFinish){
+
+    emit("Успех")
+
+     }else {
+
+    emit("Провал")
+}
+   }.flowOn(Dispatchers.IO)
+
+
+
+
+
 
 
 }
